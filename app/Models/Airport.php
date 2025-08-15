@@ -10,4 +10,9 @@ class Airport extends Model
         'name',
         'code'
     ];
+
+    public function terminals() 
+    {
+        return $this->hasMany(Terminal::class);
+    }
 }

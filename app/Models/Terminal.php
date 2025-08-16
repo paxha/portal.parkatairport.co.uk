@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Terminal extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'airport_id',
-        'name'
+        'name',
     ];
 
-    public function airport() 
+    public function airport()
     {
         return $this->belongsTo(Airport::class);
     }

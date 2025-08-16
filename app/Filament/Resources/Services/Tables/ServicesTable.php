@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Terminals\Tables;
+namespace App\Filament\Resources\Services\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -9,18 +9,20 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class TerminalsTable
+class ServicesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('airport.name')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
+                TextColumn::make('description')
+                    ->searchable(),
+                TextColumn::make('badge')
+                    ->searchable(),
+                TextColumn::make('features')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -30,7 +32,6 @@ class TerminalsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

@@ -8,10 +8,10 @@ class Airport extends Model
 {
     protected $fillable = [
         'name',
-        'code'
+        'code',
     ];
 
-    public function terminals() 
+    public function terminals()
     {
         return $this->hasMany(Terminal::class);
     }

@@ -5,6 +5,8 @@ namespace App\Filament\Resources\Services\Schemas;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\RichEditor;
+
 
 class ServiceForm
 {
@@ -16,8 +18,13 @@ class ServiceForm
                     ->required(),
                 TextInput::make('description'),
                 TextInput::make('badge'),
-                Textarea::make('features')
+                RichEditor::make('features')
+                    ->json()
                     ->columnSpanFull(),
             ]);
     }
+
+    
 }
+
+

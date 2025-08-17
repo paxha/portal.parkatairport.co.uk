@@ -21,8 +21,6 @@ class ServicesTable
                     ->searchable(),
                 TextColumn::make('badge')
                     ->searchable(),
-                TextColumn::make('features')
-                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

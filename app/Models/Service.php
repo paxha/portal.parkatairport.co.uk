@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class Service extends Model
 {
@@ -10,6 +12,11 @@ class Service extends Model
         'name',
         'description',
         'badge',
-        'features',
+        'features', 
     ];
+
+     public function price(): HasOne
+    {
+        return $this->hasOne(BrandPrice::class);
+    }
 }

@@ -8,6 +8,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Filament\Imports\TerminalImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\TerminalExporter;
+use Filament\Actions\ExportBulkAction;
 
 class TerminalsTable
 {
@@ -30,6 +34,10 @@ class TerminalsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(TerminalImporter::class)
+            ])
             ->defaultSort('id', 'desc')
             ->filters([
                 //
@@ -41,6 +49,8 @@ class TerminalsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(TerminalExporter::class),
                 ]),
             ]);
     }

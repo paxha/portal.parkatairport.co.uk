@@ -11,6 +11,10 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
+use App\Filament\Imports\BrandImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\BrandExporter;
+use Filament\Actions\ExportBulkAction;
 
 class BrandsTable
 {
@@ -41,6 +45,10 @@ class BrandsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(BrandImporter::class)
+            ])
             ->defaultSort('created_at', 'desc')
             ->recordActionsPosition(RecordActionsPosition::BeforeCells)
             ->filters([
@@ -55,6 +63,8 @@ class BrandsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(BrandExporter::class),
                 ]),
             ]);
     }

@@ -10,6 +10,10 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
+use App\Filament\Imports\BrandPriceImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\BrandPriceExporter;
+use Filament\Actions\ExportBulkAction;
 
 class BrandPricesTable
 {
@@ -43,7 +47,7 @@ class BrandPricesTable
                     return TextColumn::make("day{$day}Brand.name")
                         ->label("Day $day");
                 })->toArray(),
-                
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -52,6 +56,10 @@ class BrandPricesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(BrandPriceImporter::class)
             ])
             ->recordActionsPosition(RecordActionsPosition::BeforeCells)
             ->filters([
@@ -65,6 +73,8 @@ class BrandPricesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(BrandPriceExporter::class),
                 ]),
             ]);
     }

@@ -8,6 +8,11 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Filament\Imports\ServiceImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\ServiceExporter;
+use Filament\Actions\ExportBulkAction;
+
 
 class ServicesTable
 {
@@ -30,6 +35,10 @@ class ServicesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(ServiceImporter::class)
+            ])
             ->filters([
                 //
             ])
@@ -40,6 +49,8 @@ class ServicesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(ServiceExporter::class),
                 ]),
             ]);
     }

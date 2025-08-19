@@ -8,6 +8,11 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Filament\Imports\UserImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\UserExporter;
+use Filament\Actions\ExportBulkAction;
+
 
 class UsersTable
 {
@@ -38,6 +43,10 @@ class UsersTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(UserImporter::class)
+            ])
             ->defaultSort('id', 'desc')
             ->filters([
                 //
@@ -49,6 +58,8 @@ class UsersTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(UserExporter::class),
                 ]),
             ]);
     }

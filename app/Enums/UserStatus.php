@@ -4,13 +4,12 @@ namespace App\Enums;
 
 use BackedEnum;
 use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum UserStatus: string implements HasLabel, HasColor, HasIcon
+enum UserStatus: string implements HasColor, HasIcon, HasLabel
 {
     case Active = 'active';
     case Blocked = 'blocked';

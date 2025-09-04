@@ -8,6 +8,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Filament\Imports\AirportImporter;
+use Filament\Actions\ImportAction;
+use App\Filament\Exports\AirportExporter;
+use Filament\Actions\ExportBulkAction;
 
 class AirportsTable
 {
@@ -28,6 +32,11 @@ class AirportsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(AirportImporter::class)
+            ])
+        
             ->defaultSort('id', 'desc')
             ->filters([
                 //
@@ -39,6 +48,8 @@ class AirportsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(AirportExporter::class),
                 ]),
             ]);
     }

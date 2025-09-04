@@ -8,7 +8,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAirport extends CreateRecord
 {
     protected static string $resource = AirportResource::class;
-    
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

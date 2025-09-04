@@ -22,36 +22,36 @@ class BrandPriceForm
                                     ->preload()
                                     ->required(),
                                 Grid::make()
-                                ->schema([
-                                    Select::make('month')
-                                    ->options([
-                                        1 => 'January',
-                                        2 => 'February',
-                                        3 => 'March',
-                                        4 => 'April',
-                                        5 => 'May',
-                                        6 => 'June',
-                                        7 => 'July',
-                                        8 => 'August',
-                                        9 => 'September',
-                                        10 => 'October',
-                                        11 => 'November',
-                                        12 => 'December',
-                                    ])
-                                    ->required()
-                                    ->searchable()
-                                    ->preload()
-                                    ->reactive(),
-                                Select::make('year')
-                                    ->options(
-                                        collect(range(date('Y'), (int) date('Y') + 10))
-                                            ->mapWithKeys(fn($year) => [$year => $year])
-                                            ->toArray()
-                                    )
-                                    ->required()
-                                    ->searchable()
-                                    ->preload()
-                                    ->reactive(),
+                                    ->schema([
+                                        Select::make('month')
+                                            ->options([
+                                                1 => 'January',
+                                                2 => 'February',
+                                                3 => 'March',
+                                                4 => 'April',
+                                                5 => 'May',
+                                                6 => 'June',
+                                                7 => 'July',
+                                                8 => 'August',
+                                                9 => 'September',
+                                                10 => 'October',
+                                                11 => 'November',
+                                                12 => 'December',
+                                            ])
+                                            ->required()
+                                            ->searchable()
+                                            ->preload()
+                                            ->reactive(),
+                                        Select::make('year')
+                                            ->options(
+                                                collect(range(date('Y'), (int) date('Y') + 10))
+                                                    ->mapWithKeys(fn ($year) => [$year => $year])
+                                                    ->toArray()
+                                            )
+                                            ->required()
+                                            ->searchable()
+                                            ->preload()
+                                            ->reactive(),
                                     ])
                                     ->columnSpanFull(),
                             ])

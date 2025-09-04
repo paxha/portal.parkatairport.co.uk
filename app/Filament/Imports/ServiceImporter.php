@@ -16,13 +16,29 @@ class ServiceImporter extends Importer
     {
         return [
             ImportColumn::make('name')
+                ->label('Name')
+                ->exampleHeader('Name')
+                ->example('Park and Ride')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
             ImportColumn::make('description')
-                ->rules(['max:255']),
+                ->label('Description')
+                ->exampleHeader('Description')
+                ->example('lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+                ->requiredMapping()
+                ->rules(['nullable', 'max:255']),
             ImportColumn::make('badge')
-                ->rules(['max:255']),
-            ImportColumn::make('features'),
+                ->label('Badge')
+                ->exampleHeader('Badge')
+                ->example('Most Popular')
+                ->requiredMapping()
+                ->rules(['nullable', 'max:255']),
+            ImportColumn::make('features')
+                ->label('Features')
+                ->exampleHeader('Features')
+                ->example('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+                ->requiredMapping()
+                ->rules(['nullable', 'max:255']),
         ];
     }
 
@@ -35,10 +51,10 @@ class ServiceImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your service import has completed and ' . Number::format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Your service import has completed and '.Number::format($import->successful_rows).' '.str('row')->plural($import->successful_rows).' imported.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' '.Number::format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to import.';
         }
 
         return $body;

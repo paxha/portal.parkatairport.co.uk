@@ -2,13 +2,11 @@
 
 namespace App\Filament\Imports;
 
-use App\Enums\UserStatus;
 use App\Models\User;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 use Illuminate\Support\Number;
-use Illuminate\Validation\Rules\Enum;
 
 class UserImporter extends Importer
 {
@@ -41,23 +39,22 @@ class UserImporter extends Importer
                 ->requiredMapping()
                 ->rules(['required', 'string', 'max:255']),
 
-
         ];
     }
 
     public function resolveRecord(): User
     {
-       return User::firstOrNew([
+        return User::firstOrNew([
             'email' => $this->data['email'],
         ]);
     }
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your user import has completed and ' . Number::format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Your user import has completed and '.Number::format($import->successful_rows).' '.str('row')->plural($import->successful_rows).' imported.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' '.Number::format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to import.';
         }
 
         return $body;

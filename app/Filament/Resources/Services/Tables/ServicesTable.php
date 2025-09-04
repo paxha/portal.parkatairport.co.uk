@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\Services\Tables;
 
+use App\Filament\Exports\ServiceExporter;
+use App\Filament\Imports\ServiceImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Imports\ServiceImporter;
-use Filament\Actions\ImportAction;
-use App\Filament\Exports\ServiceExporter;
-use Filament\Actions\ExportBulkAction;
-
 
 class ServicesTable
 {
@@ -25,7 +24,8 @@ class ServicesTable
                 TextColumn::make('description')
                     ->searchable(),
                 TextColumn::make('badge')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -37,7 +37,7 @@ class ServicesTable
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(ServiceImporter::class)
+                    ->importer(ServiceImporter::class),
             ])
             ->filters([
                 //

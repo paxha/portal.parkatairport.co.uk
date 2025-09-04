@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\BrandPrices\Tables;
 
+use App\Filament\Exports\BrandPriceExporter;
+use App\Filament\Imports\BrandPriceImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
-use App\Filament\Imports\BrandPriceImporter;
-use Filament\Actions\ImportAction;
-use App\Filament\Exports\BrandPriceExporter;
-use Filament\Actions\ExportBulkAction;
 
 class BrandPricesTable
 {
@@ -26,7 +26,7 @@ class BrandPricesTable
                     ->sortable(),
                 TextColumn::make('month')
                     ->label('Month')
-                    ->formatStateUsing(fn($state) => [
+                    ->formatStateUsing(fn ($state) => [
                         1 => 'January',
                         2 => 'February',
                         3 => 'March',
@@ -59,7 +59,7 @@ class BrandPricesTable
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(BrandPriceImporter::class)
+                    ->importer(BrandPriceImporter::class),
             ])
             ->recordActionsPosition(RecordActionsPosition::BeforeCells)
             ->filters([

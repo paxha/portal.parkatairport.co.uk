@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\Terminals\Tables;
 
+use App\Filament\Exports\TerminalExporter;
+use App\Filament\Imports\TerminalImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Imports\TerminalImporter;
-use Filament\Actions\ImportAction;
-use App\Filament\Exports\TerminalExporter;
-use Filament\Actions\ExportBulkAction;
 
 class TerminalsTable
 {
@@ -36,7 +36,7 @@ class TerminalsTable
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(TerminalImporter::class)
+                    ->importer(TerminalImporter::class),
             ])
             ->defaultSort('id', 'desc')
             ->filters([

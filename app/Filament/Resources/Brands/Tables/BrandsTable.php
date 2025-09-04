@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\Brands\Tables;
 
+use App\Filament\Exports\BrandExporter;
+use App\Filament\Imports\BrandImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
-use App\Filament\Imports\BrandImporter;
-use Filament\Actions\ImportAction;
-use App\Filament\Exports\BrandExporter;
-use Filament\Actions\ExportBulkAction;
 
 class BrandsTable
 {
@@ -47,7 +47,7 @@ class BrandsTable
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(BrandImporter::class)
+                    ->importer(BrandImporter::class),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActionsPosition(RecordActionsPosition::BeforeCells)

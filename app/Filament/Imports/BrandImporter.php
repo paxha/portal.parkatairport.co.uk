@@ -14,107 +14,33 @@ class BrandImporter extends Importer
 
     public static function getColumns(): array
     {
+        $dayImportColumns = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $dayImportColumns[] = ImportColumn::make("day_$i")
+                ->label("Day $i Rate")
+                ->exampleHeader("Day $i Rate")
+                ->example([45.44 + ($i + 3), 30.44 + ($i + 2.33)])
+                ->requiredMapping()
+                ->numeric()
+                ->rules(['required']);
+        }
+        $dayImportColumns[] = ImportColumn::make('after_30')
+            ->label('After 30 Days Rate')
+            ->exampleHeader('After 30 Days Rate')
+            ->example([2.22, 1.11])
+            ->requiredMapping()
+            ->numeric()
+            ->rules(['required']);
+
         return [
             ImportColumn::make('name')
+                ->label('Name')
+                ->exampleHeader('Name')
+                ->example(['A', 'B'])
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
-            ImportColumn::make('day_1')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_2')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_3')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_4')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_5')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_6')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_7')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_8')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_9')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_10')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_11')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_12')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_13')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_14')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_15')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_16')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_17')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_18')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_19')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_20')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_21')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_22')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_23')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_24')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_25')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_26')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_27')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_28')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_29')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('day_30')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('after_30')
-                ->numeric()
-                ->rules(['integer']),
-            ImportColumn::make('active')
-                ->requiredMapping()
-                ->boolean()
-                ->rules(['required', 'boolean']),
+
+            ...$dayImportColumns,
         ];
     }
 
@@ -127,10 +53,10 @@ class BrandImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your brand import has completed and ' . Number::format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Your brand import has completed and '.Number::format($import->successful_rows).' '.str('row')->plural($import->successful_rows).' imported.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' '.Number::format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to import.';
         }
 
         return $body;

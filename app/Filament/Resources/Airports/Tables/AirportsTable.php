@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\Airports\Tables;
 
+use App\Filament\Exports\AirportExporter;
+use App\Filament\Imports\AirportImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Imports\AirportImporter;
-use Filament\Actions\ImportAction;
-use App\Filament\Exports\AirportExporter;
-use Filament\Actions\ExportBulkAction;
 
 class AirportsTable
 {
@@ -34,9 +34,9 @@ class AirportsTable
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(AirportImporter::class)
+                    ->importer(AirportImporter::class),
             ])
-        
+
             ->defaultSort('id', 'desc')
             ->filters([
                 //

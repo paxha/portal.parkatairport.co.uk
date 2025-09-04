@@ -2,11 +2,9 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\RichEditor;
-
 
 class ServiceForm
 {
@@ -23,8 +21,4 @@ class ServiceForm
                     ->columnSpanFull(),
             ]);
     }
-
-    
 }
-
-

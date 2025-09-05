@@ -9,7 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -56,35 +56,35 @@ class BookingsTable
                     ->multiple(),
                 Filter::make('departure')
                     ->schema([
-                        DateTimePicker::make('from')->label('Departure From'),
-                        DateTimePicker::make('until')->label('Departure Until'),
+                        DatePicker::make('from')->label('Departure From'),
+                        DatePicker::make('until')->label('Departure Until'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['from'] ?? null,
-                                fn(Builder $q, string $date): Builder => $q->where('departure', '>=', $date),
+                                fn (Builder $q, string $date): Builder => $q->whereDate('departure', '>=', $date),
                             )
                             ->when(
                                 $data['until'] ?? null,
-                                fn(Builder $q, string $date): Builder => $q->where('departure', '<=', $date),
+                                fn (Builder $q, string $date): Builder => $q->whereDate('departure', '<=', $date),
                             );
                     }),
                 Filter::make('arrival')
                     ->label('Arrival')
                     ->schema([
-                        DateTimePicker::make('from')->label('Arrival From'),
-                        DateTimePicker::make('until')->label('Arrival Until'),
+                        DatePicker::make('from')->label('Arrival From'),
+                        DatePicker::make('until')->label('Arrival Until'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['from'] ?? null,
-                                fn(Builder $q, string $date): Builder => $q->where('arrival', '>=', $date),
+                                fn (Builder $q, string $date): Builder => $q->whereDate('arrival', '>=', $date),
                             )
                             ->when(
                                 $data['until'] ?? null,
-                                fn(Builder $q, string $date): Builder => $q->where('arrival', '<=', $date),
+                                fn (Builder $q, string $date): Builder => $q->whereDate('arrival', '<=', $date),
                             );
                     }),
             ])

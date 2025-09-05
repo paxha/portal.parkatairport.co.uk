@@ -16,7 +16,7 @@ class BookingInfolist
                 TextEntry::make('service.name'),
                 TextEntry::make('reference'),
                 TextEntry::make('status')
-                ->badge(),
+                    ->badge(),
                 TextEntry::make('name'),
                 TextEntry::make('email')
                     ->label('Email address'),

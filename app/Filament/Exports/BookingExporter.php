@@ -23,7 +23,7 @@ class BookingExporter extends Exporter
             ExportColumn::make('service.name'),
             ExportColumn::make('reference'),
             ExportColumn::make('status')
-                ->formatStateUsing(fn(BookingStatus $state): string => $state->getLabel()),
+                ->formatStateUsing(fn (BookingStatus $state): string => $state->getLabel()),
             ExportColumn::make('name'),
             ExportColumn::make('email'),
             ExportColumn::make('phone'),
@@ -47,10 +47,10 @@ class BookingExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your booking export has completed and ' . Number::format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = 'Your booking export has completed and '.Number::format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.Number::format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

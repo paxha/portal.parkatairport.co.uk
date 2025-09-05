@@ -5,7 +5,6 @@ namespace App\Filament\Resources\BrandPrices\Tables;
 use App\Filament\Exports\BrandPriceExporter;
 use App\Filament\Imports\BrandPriceImporter;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;

@@ -2,11 +2,8 @@
 
 namespace App\Enums;
 
-use BackedEnum;
 use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
 enum BookingStatus: string implements HasColor, HasLabel

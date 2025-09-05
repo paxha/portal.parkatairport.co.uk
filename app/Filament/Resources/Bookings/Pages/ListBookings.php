@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Bookings\Pages;
 
 use App\Filament\Resources\Bookings\BookingResource;
-use App\Filament\Resources\Bookings\Widgets\StatsOverview;
 use App\Models\Booking;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;

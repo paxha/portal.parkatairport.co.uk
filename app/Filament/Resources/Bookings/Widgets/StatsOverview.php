@@ -14,11 +14,11 @@ class StatsOverview extends StatsOverviewWidget
     {
         $today = Carbon::today();
         $dates = collect(range(0, 6))
-            ->map(fn($i) => $today->copy()->subDays(6 - $i));
+            ->map(fn ($i) => $today->copy()->subDays(6 - $i));
 
-        $departureChart = $dates->map(fn($date) => Booking::whereDate('departure', $date)->count())->toArray();
+        $departureChart = $dates->map(fn ($date) => Booking::whereDate('departure', $date)->count())->toArray();
 
-        $arrivalChart = $dates->map(fn($date) => Booking::whereDate('arrival', $date)->count())->toArray();
+        $arrivalChart = $dates->map(fn ($date) => Booking::whereDate('arrival', $date)->count())->toArray();
 
         $today = Carbon::today();
         $yesterday = $today->copy()->subDay();
@@ -30,7 +30,7 @@ class StatsOverview extends StatsOverviewWidget
         $departureDiff = $todayDepartures - $yesterdayDepartures;
         $departureIcon = $departureDiff >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
         $departureColor = $departureDiff >= 0 ? 'success' : 'danger';
-        $departureDesc = abs($departureDiff) . ($departureDiff >= 0 ? ' increase' : ' decrease');
+        $departureDesc = abs($departureDiff).($departureDiff >= 0 ? ' increase' : ' decrease');
 
         $todayArrivals = Booking::whereDate('arrival', $today)->count();
 
@@ -39,7 +39,7 @@ class StatsOverview extends StatsOverviewWidget
         $arrivalDiff = $todayArrivals - $yesterdayArrivals;
         $arrivalIcon = $arrivalDiff >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
         $arrivalColor = $arrivalDiff >= 0 ? 'success' : 'danger';
-        $arrivalDesc = abs($arrivalDiff) . ($arrivalDiff >= 0 ? ' increase' : ' decrease');
+        $arrivalDesc = abs($arrivalDiff).($arrivalDiff >= 0 ? ' increase' : ' decrease');
 
         $upcomingDepartures = Booking::where('status', BookingStatus::Confirmed->value)
             ->whereDate('departure', '>', today())

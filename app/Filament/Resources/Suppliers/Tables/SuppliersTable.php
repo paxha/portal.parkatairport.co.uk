@@ -19,6 +19,9 @@ class SuppliersTable
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('airport.name'),
                 TextColumn::make('name')
                     ->searchable(),
@@ -27,6 +30,14 @@ class SuppliersTable
                     ->badge(),
                 TextColumn::make('email')
                     ->searchable(),
+                TextColumn::make('phone')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('address')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('commission')
+                    ->suffix('%')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -36,6 +47,8 @@ class SuppliersTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('id', 'desc')
+            ->reorderableColumns()
             ->headerActions([
                 ImportAction::make()
                     ->importer(SupplierImporter::class),

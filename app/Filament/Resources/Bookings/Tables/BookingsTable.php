@@ -55,10 +55,12 @@ class BookingsTable
                     ->options(BookingStatus::class)
                     ->multiple(),
                 Filter::make('departure')
+                    ->label('Departure')
                     ->schema([
                         DatePicker::make('from')->label('Departure From'),
-                        DatePicker::make('until')->label('Departure Until'),
+                        DatePicker::make('until')->label('Until'),
                     ])
+                    ->columns()
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -74,8 +76,9 @@ class BookingsTable
                     ->label('Arrival')
                     ->schema([
                         DatePicker::make('from')->label('Arrival From'),
-                        DatePicker::make('until')->label('Arrival Until'),
+                        DatePicker::make('until')->label('Until'),
                     ])
+                    ->columns()
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(

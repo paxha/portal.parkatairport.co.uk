@@ -46,17 +46,9 @@ class BookingsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('airport_id')
-                    ->label('Airport')
-                    ->relationship('airport', 'name')
-                    ->multiple(),
                 SelectFilter::make('supplier_id')
                     ->label('Supplier')
                     ->relationship('supplier', 'name')
-                    ->multiple(),
-                SelectFilter::make('service_id')
-                    ->label('Service')
-                    ->relationship('service', 'name')
                     ->multiple(),
                 SelectFilter::make('status')
                     ->label('Status')

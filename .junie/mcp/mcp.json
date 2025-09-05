@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/pasha/Library/Application Support/Herd/bin/php84",
+            "args": [
+                "/Users/pasha/Herd/parkingportal/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

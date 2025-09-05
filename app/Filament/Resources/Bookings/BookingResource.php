@@ -9,6 +9,7 @@ use App\Filament\Resources\Bookings\Pages\ViewBooking;
 use App\Filament\Resources\Bookings\Schemas\BookingForm;
 use App\Filament\Resources\Bookings\Schemas\BookingInfolist;
 use App\Filament\Resources\Bookings\Tables\BookingsTable;
+use App\Filament\Resources\Bookings\Widgets\StatsOverview;
 use App\Models\Booking;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -23,6 +24,16 @@ class BookingResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'reference';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::query()
+            ->whereDate('departure', today())
+            ->orWhereDate('arrival', today())
+            ->count();
+    }
+
+    protected static ?string $navigationBadgeTooltip = 'Today\'s Bookings';
 
     public static function form(Schema $schema): Schema
     {
@@ -43,6 +54,13 @@ class BookingResource extends Resource
     {
         return [
             //
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            StatsOverview::class,
         ];
     }
 

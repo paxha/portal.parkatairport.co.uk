@@ -12,6 +12,7 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -45,6 +46,7 @@ class BookingsTable
                     ->dateTime('M d, Y H:i')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('id', 'desc')
             ->filters([
                 SelectFilter::make('supplier_id')
                     ->label('Supplier')
@@ -58,9 +60,8 @@ class BookingsTable
                     ->label('Departure')
                     ->schema([
                         DatePicker::make('from')->label('Departure From'),
-                        DatePicker::make('until')->label('Until'),
+                        DatePicker::make('until')->label('Departure Until'),
                     ])
-                    ->columns()
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -76,9 +77,8 @@ class BookingsTable
                     ->label('Arrival')
                     ->schema([
                         DatePicker::make('from')->label('Arrival From'),
-                        DatePicker::make('until')->label('Until'),
+                        DatePicker::make('until')->label('Arrival Until'),
                     ])
-                    ->columns()
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -90,7 +90,7 @@ class BookingsTable
                                 fn (Builder $q, string $date): Builder => $q->whereDate('arrival', '<=', $date),
                             );
                     }),
-            ])
+            ], layout: FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

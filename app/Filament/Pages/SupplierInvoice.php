@@ -293,7 +293,7 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                             }
 
                             $pdf = Pdf::loadView('exports.supplier-invoices-pdf', [
-                                'title' => 'Supplier Invoices Export',
+                                'title' => 'Supplier Invoices',
                                 'generatedAt' => $generatedAt,
                                 'headers' => $headers,
                                 'rows' => $rows,

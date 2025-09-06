@@ -3,11 +3,11 @@
 namespace App\Filament\Pages;
 
 use App\Models\Supplier;
-use App\Filament\Exports\SupplierInvoiceExporter; // add exporter
+use App\Filament\Exports\SupplierInvoiceExporter;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\ExportAction; // correct ExportAction import (Filament v4)
-use Filament\Actions\ExportBulkAction; // add bulk export
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Page;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
@@ -21,6 +21,16 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\BulkAction;
+use Filament\Actions\Exports\Models\Export as ExportModel;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
 {
@@ -151,6 +161,88 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                     ->label('Export Selected')
                     ->exporter(SupplierInvoiceExporter::class)
                     ->columnMappingColumns(2),
+                BulkAction::make('export_selected_pdf')
+                    ->label('Export PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('gray')
+                    ->schema(function (): array {
+                        return [
+                            Fieldset::make('Columns')
+                                ->schema(function (): array {
+                                    return array_map(
+                                        fn ($column): Flex => Flex::make([
+                                            Checkbox::make('isEnabled')
+                                                ->hiddenLabel()
+                                                ->default($column->isEnabledByDefault())
+                                                ->live()
+                                                ->grow(false),
+                                            TextInput::make('label')
+                                                ->hiddenLabel()
+                                                ->default($column->getLabel())
+                                                ->placeholder($column->getLabel())
+                                                ->disabled(fn (Get $get): bool => ! $get('isEnabled'))
+                                                ->required(fn (Get $get): bool => (bool) $get('isEnabled')),
+                                        ])
+                                            ->verticallyAlignCenter()
+                                            ->statePath($column->getName()),
+                                        SupplierInvoiceExporter::getColumns(),
+                                    );
+                                })
+                                ->statePath('columnMap'),
+                        ];
+                    })
+                    ->action(function (array $data, $livewire, ?EloquentCollection $records, ?Builder $recordsQuery) {
+                        // Load records: selected or all filtered
+                        if ($records && $records->isNotEmpty()) {
+                            $suppliers = $records; // already hydrated with subselect columns
+                        } else {
+                            $query = method_exists($livewire, 'getTableQueryForExport') ? $livewire->getTableQueryForExport() : Supplier::query();
+                            $suppliers = $query->get();
+                        }
+
+                        if ($suppliers->isEmpty()) {
+                            Notification::make()->title('No supplier invoices to export')->warning()->send();
+                            return null;
+                        }
+
+                        // Build column map from form data; fallback to all columns if none explicitly selected
+                        $columnMap = collect($data['columnMap'] ?? [])
+                            ->filter(fn (array $col): bool => (bool) ($col['isEnabled'] ?? false))
+                            ->mapWithKeys(fn (array $col, string $name): array => [$name => $col['label'] ?? $name])
+                            ->all();
+                        if (empty($columnMap)) {
+                            $columnMap = collect(SupplierInvoiceExporter::getColumns())
+                                ->mapWithKeys(fn ($col) => [$col->getName() => $col->getLabel()])
+                                ->all();
+                        }
+
+                        $exportModel = app(ExportModel::class);
+                        $exportModel->exporter = SupplierInvoiceExporter::class;
+                        $exporter = $exportModel->getExporter(columnMap: $columnMap, options: []);
+
+                        $headers = array_values($columnMap);
+                        $rows = [];
+                        foreach ($suppliers as $supplier) {
+                            $rows[] = $exporter($supplier);
+                        }
+
+                        $generatedAt = now();
+                        $cols = count($headers);
+                        $paper = $cols <= 8 ? 'a4' : ($cols <= 14 ? 'a3' : 'a2');
+
+                        $pdf = Pdf::loadView('exports.supplier-invoices-pdf', [
+                            'title' => 'Supplier Invoices Export',
+                            'generatedAt' => $generatedAt,
+                            'headers' => $headers,
+                            'rows' => $rows,
+                            'paper' => strtoupper($paper),
+                        ])->setPaper($paper, 'landscape');
+
+                        return response()->streamDownload(static function () use ($pdf): void {
+                            echo $pdf->output();
+                        }, 'supplier-invoices-'.$generatedAt->format('Y-m-d_H-i').'.pdf', ['Content-Type' => 'application/pdf']);
+                    })
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 }

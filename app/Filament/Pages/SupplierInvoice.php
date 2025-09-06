@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Exports\SupplierInvoiceExporter;
 use App\Models\Supplier;
+use BackedEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -21,6 +22,7 @@ use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -31,12 +33,19 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use UnitEnum;
 
 class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
 {
     use InteractsWithActions, InteractsWithSchemas, InteractsWithTable;
 
     protected string $view = 'filament.pages.supplier-invoice';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Reports';
+
+    protected static ?int $navigationSort = 20;
 
     protected ?string $currentFromDate = null;
 
@@ -45,6 +54,8 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
     public function table(Table $table): Table
     {
         return $table
+            // Apply filters immediately so defaults take effect
+            ->deferFilters(false)
             ->query(function () use ($table) {
                 $fromState = $table->getFilter('from_date')?->getState();
                 $toState = $table->getFilter('to_date')?->getState();
@@ -167,11 +178,15 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                     }),
                 Filter::make('from_date')
                     ->schema([
-                        DatePicker::make('from_date')->label('From Date'),
+                        DatePicker::make('from_date')
+                            ->label('From Date')
+                            ->default(now()->subMonth()->startOfMonth()->toDateString()),
                     ]),
                 Filter::make('to_date')
                     ->schema([
-                        DatePicker::make('to_date')->label('To Date'),
+                        DatePicker::make('to_date')
+                            ->label('To Date')
+                            ->default(now()->subMonth()->endOfMonth()->toDateString()),
                     ]),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)

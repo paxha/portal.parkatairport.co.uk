@@ -15,12 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class TerminalResource extends Resource
 {
     protected static ?string $model = Terminal::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ViewColumns;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Configuration';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

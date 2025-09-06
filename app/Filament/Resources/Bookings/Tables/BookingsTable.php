@@ -112,6 +112,7 @@ class BookingsTable
             ])
             ->defaultSort('id', 'desc')
             ->reorderableColumns()
+            ->paginated([50, 100])
             ->filters([
                 SelectFilter::make('supplier_id')
                     ->label('Supplier')

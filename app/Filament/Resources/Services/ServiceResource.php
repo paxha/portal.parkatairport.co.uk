@@ -15,12 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Cog6Tooth;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Configuration';
+
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {

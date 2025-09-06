@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Airport;
-use App\Models\Terminal;
-use App\Models\Supplier;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\Supplier;
+use App\Models\Terminal;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

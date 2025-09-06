@@ -3,12 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Booking;
-use App\Models\Airport;
 use App\Models\Supplier;
-use App\Models\Service;
 use App\Models\Terminal;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Booking>

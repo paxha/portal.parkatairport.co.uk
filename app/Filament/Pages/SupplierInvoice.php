@@ -2,15 +2,23 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Supplier;
 use App\Filament\Exports\SupplierInvoiceExporter;
+use App\Models\Supplier;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\ExportAction;
 use Filament\Actions\ExportBulkAction;
+use Filament\Actions\Exports\Models\Export as ExportModel;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -22,15 +30,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Filament\Actions\BulkAction;
-use Filament\Actions\Exports\Models\Export as ExportModel;
-use Filament\Notifications\Notification;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Flex;
-use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
@@ -40,6 +39,7 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
     protected string $view = 'filament.pages.supplier-invoice';
 
     protected ?string $currentFromDate = null;
+
     protected ?string $currentToDate = null;
 
     public function table(Table $table): Table
@@ -60,32 +60,48 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                     $sub->from('bookings')
                         ->selectRaw('COUNT(*)')
                         ->whereColumn('bookings.supplier_id', 'suppliers.id');
-                    if ($fromDate) { $sub->whereDate('bookings.created_at', '>=', $fromDate); }
-                    if ($toDate) { $sub->whereDate('bookings.created_at', '<=', $toDate); }
+                    if ($fromDate) {
+                        $sub->whereDate('bookings.created_at', '>=', $fromDate);
+                    }
+                    if ($toDate) {
+                        $sub->whereDate('bookings.created_at', '<=', $toDate);
+                    }
                 }, 'total_bookings');
                 // total_amount
                 $query->selectSub(function ($sub) use ($fromDate, $toDate) {
                     $sub->from('bookings')
                         ->selectRaw('COALESCE(SUM(amount),0)')
                         ->whereColumn('bookings.supplier_id', 'suppliers.id');
-                    if ($fromDate) { $sub->whereDate('bookings.created_at', '>=', $fromDate); }
-                    if ($toDate) { $sub->whereDate('bookings.created_at', '<=', $toDate); }
+                    if ($fromDate) {
+                        $sub->whereDate('bookings.created_at', '>=', $fromDate);
+                    }
+                    if ($toDate) {
+                        $sub->whereDate('bookings.created_at', '<=', $toDate);
+                    }
                 }, 'total_amount');
                 // supplier_cost
                 $query->selectSub(function ($sub) use ($fromDate, $toDate) {
                     $sub->from('bookings')
                         ->selectRaw('COALESCE(SUM(supplier_cost),0)')
                         ->whereColumn('bookings.supplier_id', 'suppliers.id');
-                    if ($fromDate) { $sub->whereDate('bookings.created_at', '>=', $fromDate); }
-                    if ($toDate) { $sub->whereDate('bookings.created_at', '<=', $toDate); }
+                    if ($fromDate) {
+                        $sub->whereDate('bookings.created_at', '>=', $fromDate);
+                    }
+                    if ($toDate) {
+                        $sub->whereDate('bookings.created_at', '<=', $toDate);
+                    }
                 }, 'supplier_cost');
                 // payable_amount (recompute expression so summarizer can work directly on column)
                 $query->selectSub(function ($sub) use ($fromDate, $toDate) {
                     $sub->from('bookings')
                         ->selectRaw('COALESCE(SUM(amount),0) - COALESCE(SUM(supplier_cost),0)')
                         ->whereColumn('bookings.supplier_id', 'suppliers.id');
-                    if ($fromDate) { $sub->whereDate('bookings.created_at', '>=', $fromDate); }
-                    if ($toDate) { $sub->whereDate('bookings.created_at', '<=', $toDate); }
+                    if ($fromDate) {
+                        $sub->whereDate('bookings.created_at', '>=', $fromDate);
+                    }
+                    if ($toDate) {
+                        $sub->whereDate('bookings.created_at', '<=', $toDate);
+                    }
                 }, 'payable_amount');
 
                 // filter out suppliers without bookings in range
@@ -93,8 +109,12 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                     $sub->selectRaw('1')
                         ->from('bookings')
                         ->whereColumn('bookings.supplier_id', 'suppliers.id');
-                    if ($fromDate) { $sub->whereDate('bookings.created_at', '>=', $fromDate); }
-                    if ($toDate) { $sub->whereDate('bookings.created_at', '<=', $toDate); }
+                    if ($fromDate) {
+                        $sub->whereDate('bookings.created_at', '>=', $fromDate);
+                    }
+                    if ($toDate) {
+                        $sub->whereDate('bookings.created_at', '<=', $toDate);
+                    }
                 });
 
                 return $query;
@@ -128,20 +148,21 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
             ->filters([
                 SelectFilter::make('suppliers')
                     ->label('Supplier')
-                    ->options(fn() => Supplier::query()->orderBy('name')->pluck('name', 'id')->toArray())
+                    ->options(fn () => Supplier::query()->orderBy('name')->pluck('name', 'id')->toArray())
                     ->multiple()
                     ->searchable()
                     ->preload()
                     ->columnSpan(2)
                     ->query(function (Builder $query, array $state) {
                         $raw = $state['values'] ?? $state; // Filament supplies ['values'=>[]] for multiple
-                        if (!is_array($raw)) {
+                        if (! is_array($raw)) {
                             $raw = [$raw];
                         }
-                        $ids = array_values(array_unique(array_filter(array_map(static fn($v) => (int)$v, $raw), static fn($v) => $v > 0)));
+                        $ids = array_values(array_unique(array_filter(array_map(static fn ($v) => (int) $v, $raw), static fn ($v) => $v > 0)));
                         if ($ids) {
                             $query->whereIn('suppliers.id', $ids);
                         }
+
                         return $query;
                     }),
                 Filter::make('from_date')
@@ -155,13 +176,6 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
             ->paginated(false)
-            // Replace row actions with header & bulk actions
-            ->headerActions([
-                ExportAction::make('export_all')
-                    ->label('Export All')
-                    ->exporter(SupplierInvoiceExporter::class)
-                    ->columnMappingColumns(2),
-            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     ExportBulkAction::make()
@@ -209,6 +223,7 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
 
                             if ($suppliers->isEmpty()) {
                                 Notification::make()->title('No supplier invoices to export')->warning()->send();
+
                                 return null;
                             }
 

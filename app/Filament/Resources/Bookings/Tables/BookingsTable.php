@@ -129,8 +129,8 @@ class BookingsTable
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'] ?? null, fn(Builder $q, string $date): Builder => $q->whereDate('departure', '>=', $date))
-                            ->when($data['until'] ?? null, fn(Builder $q, string $date): Builder => $q->whereDate('departure', '<=', $date));
+                            ->when($data['from'] ?? null, fn (Builder $q, string $date): Builder => $q->whereDate('departure', '>=', $date))
+                            ->when($data['until'] ?? null, fn (Builder $q, string $date): Builder => $q->whereDate('departure', '<=', $date));
                     }),
                 Filter::make('arrival')
                     ->label('Arrival')
@@ -140,8 +140,8 @@ class BookingsTable
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'] ?? null, fn(Builder $q, string $date): Builder => $q->whereDate('arrival', '>=', $date))
-                            ->when($data['until'] ?? null, fn(Builder $q, string $date): Builder => $q->whereDate('arrival', '<=', $date));
+                            ->when($data['from'] ?? null, fn (Builder $q, string $date): Builder => $q->whereDate('arrival', '>=', $date))
+                            ->when($data['until'] ?? null, fn (Builder $q, string $date): Builder => $q->whereDate('arrival', '<=', $date));
                     }),
             ], layout: FiltersLayout::AboveContentCollapsible)
             ->recordActions([
@@ -164,7 +164,7 @@ class BookingsTable
                                 Fieldset::make('Columns')
                                     ->schema(function (): array {
                                         return array_map(
-                                            fn($column): Flex => Flex::make([
+                                            fn ($column): Flex => Flex::make([
                                                 Checkbox::make('isEnabled')
                                                     ->hiddenLabel()
                                                     ->default($column->isEnabledByDefault())
@@ -174,8 +174,8 @@ class BookingsTable
                                                     ->hiddenLabel()
                                                     ->default($column->getLabel())
                                                     ->placeholder($column->getLabel())
-                                                    ->disabled(fn(Get $get): bool => !$get('isEnabled'))
-                                                    ->required(fn(Get $get): bool => (bool)$get('isEnabled')),
+                                                    ->disabled(fn (Get $get): bool => ! $get('isEnabled'))
+                                                    ->required(fn (Get $get): bool => (bool) $get('isEnabled')),
                                             ])
                                                 ->verticallyAlignCenter()
                                                 ->statePath($column->getName()),
@@ -203,13 +203,13 @@ class BookingsTable
 
                             // Build column map from form data; fallback to all columns if none selected
                             $columnMap = collect($data['columnMap'] ?? [])
-                                ->filter(fn(array $col): bool => (bool)($col['isEnabled'] ?? false))
-                                ->mapWithKeys(fn(array $col, string $name): array => [$name => $col['label'] ?? $name])
+                                ->filter(fn (array $col): bool => (bool) ($col['isEnabled'] ?? false))
+                                ->mapWithKeys(fn (array $col, string $name): array => [$name => $col['label'] ?? $name])
                                 ->all();
 
                             if (empty($columnMap)) {
                                 $columnMap = collect(BookingExporter::getColumns())
-                                    ->mapWithKeys(fn($col) => [$col->getName() => $col->getLabel()])
+                                    ->mapWithKeys(fn ($col) => [$col->getName() => $col->getLabel()])
                                     ->all();
                             }
 
@@ -239,7 +239,7 @@ class BookingsTable
 
                             return response()->streamDownload(static function () use ($pdf): void {
                                 echo $pdf->output();
-                            }, 'bookings-' . $generatedAt->format('Y-m-d_H-i') . '.pdf', ['Content-Type' => 'application/pdf']);
+                            }, 'bookings-'.$generatedAt->format('Y-m-d_H-i').'.pdf', ['Content-Type' => 'application/pdf']);
                         })
                         ->deselectRecordsAfterCompletion(),
                 ]),

@@ -30,4 +30,3 @@ class SupplierInvoiceExporter extends Exporter
         return 'Supplier invoices export completed successfully.';
     }
 }
-

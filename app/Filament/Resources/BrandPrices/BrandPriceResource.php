@@ -21,7 +21,7 @@ class BrandPriceResource extends Resource
 {
     protected static ?string $model = BrandPrice::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ReceiptPercent;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedReceiptPercent;
 
     protected static string|UnitEnum|null $navigationGroup = 'Pricing';
 

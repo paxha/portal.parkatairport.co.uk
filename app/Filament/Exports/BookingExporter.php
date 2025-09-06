@@ -17,31 +17,45 @@ class BookingExporter extends Exporter
     {
         return [
             ExportColumn::make('id')
-                ->label('ID'),
-            ExportColumn::make('airport.name'),
-            ExportColumn::make('supplier.name'),
-            ExportColumn::make('service.name'),
+                ->label('ID')
+                ->enabledByDefault(false),
+            ExportColumn::make('airport.name')
+                ->enabledByDefault(false),
+            ExportColumn::make('supplier.name')
+                ->enabledByDefault(false),
+            ExportColumn::make('service.name')
+                ->enabledByDefault(false),
             ExportColumn::make('reference'),
             ExportColumn::make('status')
-                ->formatStateUsing(fn (BookingStatus $state): string => $state->getLabel()),
+                ->formatStateUsing(fn (BookingStatus $state): string => $state->getLabel())
+                ->enabledByDefault(false),
             ExportColumn::make('name'),
-            ExportColumn::make('email'),
+            ExportColumn::make('email')
+                ->enabledByDefault(false),
             ExportColumn::make('phone'),
             ExportColumn::make('departure'),
             ExportColumn::make('arrival'),
-            ExportColumn::make('departureTerminal.name'),
-            ExportColumn::make('arrivalTerminal.name'),
-            ExportColumn::make('departure_flight_number'),
-            ExportColumn::make('arrival_flight_number'),
+            ExportColumn::make('departureTerminal.name')
+                ->enabledByDefault(false),
+            ExportColumn::make('arrivalTerminal.name')
+                ->enabledByDefault(false),
+            ExportColumn::make('departure_flight_number')
+                ->enabledByDefault(false),
+            ExportColumn::make('arrival_flight_number')
+                ->enabledByDefault(false),
             ExportColumn::make('registration_number'),
             ExportColumn::make('make'),
             ExportColumn::make('model'),
             ExportColumn::make('color'),
             ExportColumn::make('passengers'),
-            ExportColumn::make('amount'),
-            ExportColumn::make('supplier_cost'),
-            ExportColumn::make('created_at'),
-            ExportColumn::make('updated_at'),
+            ExportColumn::make('amount')
+                ->enabledByDefault(false),
+            ExportColumn::make('supplier_cost')
+                ->enabledByDefault(false),
+            ExportColumn::make('created_at')
+                ->enabledByDefault(false),
+            ExportColumn::make('updated_at')
+                ->enabledByDefault(false),
         ];
     }
 

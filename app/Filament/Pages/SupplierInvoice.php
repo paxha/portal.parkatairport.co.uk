@@ -41,7 +41,7 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
 
     protected string $view = 'filament.pages.supplier-invoice';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static string|UnitEnum|null $navigationGroup = 'Reports';
 

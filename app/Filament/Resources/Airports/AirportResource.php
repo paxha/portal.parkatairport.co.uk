@@ -21,7 +21,7 @@ class AirportResource extends Resource
 {
     protected static ?string $model = Airport::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::MapPin;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
 
     protected static string|UnitEnum|null $navigationGroup = 'Configuration';
 

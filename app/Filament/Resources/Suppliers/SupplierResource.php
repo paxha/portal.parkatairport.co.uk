@@ -22,7 +22,7 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingStorefront;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
     protected static string|UnitEnum|null $navigationGroup = 'Operations';
 

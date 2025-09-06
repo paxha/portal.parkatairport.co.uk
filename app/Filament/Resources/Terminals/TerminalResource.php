@@ -21,7 +21,7 @@ class TerminalResource extends Resource
 {
     protected static ?string $model = Terminal::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ViewColumns;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedViewColumns;
 
     protected static string|UnitEnum|null $navigationGroup = 'Configuration';
 

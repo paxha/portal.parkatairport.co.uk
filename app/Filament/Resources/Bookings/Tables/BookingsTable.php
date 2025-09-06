@@ -213,6 +213,8 @@ class BookingsTable
                                     ->mapWithKeys(fn ($col) => [$col->getName() => $col->getLabel()])
                                     ->all();
                             }
+                            // Determine orientation based on number of columns
+                            $orientation = count($columnMap) > 12 ? 'landscape' : 'portrait';
 
                             $exportModel = app(ExportModel::class);
                             $exportModel->exporter = BookingExporter::class;
@@ -226,17 +228,12 @@ class BookingsTable
 
                             $generatedAt = now();
 
-                            // Dynamically choose paper size based on number of columns
-                            $cols = count($headers);
-                            $paper = $cols <= 12 ? 'a4' : ($cols <= 20 ? 'a3' : 'a2');
-
                             $pdf = Pdf::loadView('exports.bookings-pdf', [
-                                'title' => 'Bookings Export',
+                                'title' => 'Bookings',
                                 'generatedAt' => $generatedAt,
                                 'headers' => $headers,
                                 'rows' => $rows,
-                                'paper' => strtoupper($paper),
-                            ])->setPaper($paper, 'landscape');
+                            ])->setPaper('a4', $orientation);
 
                             return response()->streamDownload(static function () use ($pdf): void {
                                 echo $pdf->output();

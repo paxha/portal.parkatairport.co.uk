@@ -5,10 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Export' }}</title>
+    @php
+        $paperSize = strtoupper($paper ?? 'A4');
+        $orientationInput = strtolower($orientation ?? '');
+        $orientation = in_array($orientationInput, ['portrait', 'landscape']) ? $orientationInput : 'landscape';
+    @endphp
     <style>
-        @page { size: {{ strtoupper($paper ?? 'A4') }} landscape; margin: 8mm; }
+        @page { size: {{ $paperSize }} {{ $orientation }}; margin: 10mm 8mm; }
         * { box-sizing: border-box; }
-        body { font-family: DejaVu Sans, Arial, Helvetica, sans-serif; font-size: 11px; color: #111827; }
+        html, body { width: 100%; height: 100%; }
+        body { font-family: DejaVu Sans, Arial, Helvetica, sans-serif; font-size: 11px; color: #111827; margin: 0; }
         h1 { font-size: 16px; margin: 0 0 6px; }
         .meta { font-size: 10px; color: #6b7280; margin-bottom: 4px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }

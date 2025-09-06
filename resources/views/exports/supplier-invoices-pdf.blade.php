@@ -9,17 +9,19 @@
         @page { size: {{ strtoupper($paper ?? 'A4') }} landscape; margin: 8mm; }
         * { box-sizing: border-box; }
         body { font-family: DejaVu Sans, Arial, Helvetica, sans-serif; font-size: 11px; color: #111827; }
-        h1 { font-size: 16px; margin: 0 0 10px; }
-        .meta { font-size: 10px; color: #6b7280; margin-bottom: 8px; }
+        h1 { font-size: 16px; margin: 0 0 6px; }
+        .meta { font-size: 10px; color: #6b7280; margin-bottom: 4px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th, td { border: 1px solid #e5e7eb; padding: 4px 6px; text-align: left; vertical-align: top; word-wrap: break-word; overflow-wrap: anywhere; }
         th { background: #f3f4f6; font-weight: 600; }
         tr:nth-child(even) td { background: #fafafa; }
         .right { text-align: right; }
+        .summary-row td { font-weight: 600; background: #f3f4f6; }
     </style>
 </head>
 <body>
     <h1>{{ $title ?? 'Export' }}</h1>
+    <div class="meta">Date Range: {{ $dateRange ?? 'All Dates' }}</div>
     <div class="meta">Generated at: {{ isset($generatedAt) ? \Illuminate\Support\Carbon::parse($generatedAt)->format('Y-m-d H:i') : now()->format('Y-m-d H:i') }}</div>
 
     <table>
@@ -38,8 +40,14 @@
                     @endforeach
                 </tr>
             @endforeach
+            @if (!empty($summaryRow))
+                <tr class="summary-row">
+                    @foreach ($summaryRow as $cell)
+                        <td>{{ $cell }}</td>
+                    @endforeach
+                </tr>
+            @endif
         </tbody>
     </table>
 </body>
 </html>
-

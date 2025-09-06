@@ -38,6 +38,9 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
 
     protected string $view = 'filament.pages.supplier-invoice';
 
+    protected ?string $currentFromDate = null;
+    protected ?string $currentToDate = null;
+
     public function table(Table $table): Table
     {
         return $table
@@ -46,6 +49,8 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                 $toState = $table->getFilter('to_date')?->getState();
                 $fromDate = is_array($fromState) ? ($fromState['from_date'] ?? null) : $fromState;
                 $toDate = is_array($toState) ? ($toState['to_date'] ?? null) : $toState;
+                $this->currentFromDate = $fromDate;
+                $this->currentToDate = $toDate;
 
                 $query = Supplier::query()->select('suppliers.*');
 
@@ -226,16 +231,58 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                             $rows[] = $exporter($supplier);
                         }
 
+                        // Build summary row aligned to selected columns
+                        $countSuppliers = $suppliers->count();
+                        $sumTotalBookings = $suppliers->sum('total_bookings');
+                        $sumTotalAmount = $suppliers->sum('total_amount');
+                        $sumSupplierCost = $suppliers->sum('supplier_cost');
+                        $sumPayableAmount = $suppliers->sum('payable_amount');
+
+                        $columnNames = array_keys($columnMap); // preserve order matching headers
+                        $summaryRow = [];
+                        foreach ($columnNames as $col) {
+                            switch ($col) {
+                                case 'name':
+                                    $summaryRow[] = 'Totals ('.$countSuppliers.')';
+                                    break;
+                                case 'total_bookings':
+                                    $summaryRow[] = (string) $sumTotalBookings;
+                                    break;
+                                case 'total_amount':
+                                    $summaryRow[] = number_format((float) $sumTotalAmount, 2, '.', '');
+                                    break;
+                                case 'supplier_cost':
+                                    $summaryRow[] = number_format((float) $sumSupplierCost, 2, '.', '');
+                                    break;
+                                case 'payable_amount':
+                                    $summaryRow[] = number_format((float) $sumPayableAmount, 2, '.', '');
+                                    break;
+                                default:
+                                    $summaryRow[] = '';
+                            }
+                        }
+
                         $generatedAt = now();
                         $cols = count($headers);
                         $paper = $cols <= 8 ? 'a4' : ($cols <= 14 ? 'a3' : 'a2');
+
+                        $dateRangeDisplay = 'All Dates';
+                        if ($this->currentFromDate && $this->currentToDate) {
+                            $dateRangeDisplay = $this->currentFromDate.' to '.$this->currentToDate;
+                        } elseif ($this->currentFromDate) {
+                            $dateRangeDisplay = 'From '.$this->currentFromDate;
+                        } elseif ($this->currentToDate) {
+                            $dateRangeDisplay = 'Until '.$this->currentToDate;
+                        }
 
                         $pdf = Pdf::loadView('exports.supplier-invoices-pdf', [
                             'title' => 'Supplier Invoices Export',
                             'generatedAt' => $generatedAt,
                             'headers' => $headers,
                             'rows' => $rows,
+                            'summaryRow' => $summaryRow,
                             'paper' => strtoupper($paper),
+                            'dateRange' => $dateRangeDisplay,
                         ])->setPaper($paper, 'landscape');
 
                         return response()->streamDownload(static function () use ($pdf): void {

@@ -3,8 +3,11 @@
 namespace App\Filament\Pages;
 
 use App\Models\Supplier;
+use App\Filament\Exports\SupplierInvoiceExporter; // add exporter
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\ExportAction; // correct ExportAction import (Filament v4)
+use Filament\Actions\ExportBulkAction; // add bulk export
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Page;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
@@ -135,6 +138,19 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                     ]),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
-            ->paginated(false);
+            ->paginated(false)
+            // Replace row actions with header & bulk actions
+            ->headerActions([
+                ExportAction::make('export_all')
+                    ->label('Export All')
+                    ->exporter(SupplierInvoiceExporter::class)
+                    ->columnMappingColumns(2),
+            ])
+            ->bulkActions([
+                ExportBulkAction::make('export_selected')
+                    ->label('Export Selected')
+                    ->exporter(SupplierInvoiceExporter::class)
+                    ->columnMappingColumns(2),
+            ]);
     }
 }

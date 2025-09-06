@@ -5,24 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Export' }}</title>
-    @php
-        $paperSize = strtoupper($paper ?? 'A4');
-        $orientationInput = strtolower($orientation ?? '');
-        $orientation = in_array($orientationInput, ['portrait', 'landscape']) ? $orientationInput : 'landscape';
-    @endphp
     <style>
-        @page { size: {{ $paperSize }} {{ $orientation }}; margin: 10mm 8mm; }
-        * { box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; }
-        body { font-family: DejaVu Sans, Arial, Helvetica, sans-serif; font-size: 11px; color: #111827; margin: 0; }
-        h1 { font-size: 16px; margin: 0 0 6px; }
-        .meta { font-size: 10px; color: #6b7280; margin-bottom: 4px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid #e5e7eb; padding: 4px 6px; text-align: left; vertical-align: top; word-wrap: break-word; overflow-wrap: anywhere; }
-        th { background: #f3f4f6; font-weight: 600; }
-        tr:nth-child(even) td { background: #fafafa; }
-        .right { text-align: right; }
-        .summary-row td { font-weight: 600; background: #f3f4f6; }
+        /* Professional table-only styling */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; table-layout: fixed; }
+        thead { display: table-header-group; }
+        thead th { background: #f1f5f9; color: #1e293b; font-weight: 600; padding: 6px 8px; border: 1px solid #d6dde4; font-size: 10.5px; text-align: left; }
+        thead th:first-child { border-top-left-radius: 4px; }
+        thead th:last-child { border-top-right-radius: 4px; }
+        tbody td { background: #ffffff; padding: 5px 8px; border: 1px solid #e2e8f0; vertical-align: top; color: #334155; line-height: 1.35; }
+        tbody tr:nth-child(even) td { background: #f8fafc; }
+        tbody tr:hover td { background: #f1f5f9; }
+        tbody tr:last-child td:first-child { border-bottom-left-radius: 4px; }
+        tbody tr:last-child td:last-child { border-bottom-right-radius: 4px; }
+        td.right, th.right { text-align: right; }
+        td.center, th.center { text-align: center; }
+        td.nowrap, th.nowrap { white-space: nowrap; }
+        td.wrap, th.wrap { white-space: normal; word-break: break-word; }
+        /* Subtle column separators */
+        thead th + th, tbody td + td { border-left-color: #dbe2e8; }
+        /* Prevent header row from splitting */
+        thead tr { page-break-inside: avoid; }
     </style>
 </head>
 <body>

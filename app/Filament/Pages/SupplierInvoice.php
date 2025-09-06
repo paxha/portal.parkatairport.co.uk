@@ -295,8 +295,6 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                             }
 
                             $generatedAt = now();
-                            $cols = count($headers);
-                            $paper = $cols <= 8 ? 'a4' : ($cols <= 14 ? 'a3' : 'a2');
 
                             $dateRangeDisplay = 'All Dates';
                             if ($this->currentFromDate && $this->currentToDate) {
@@ -313,9 +311,8 @@ class SupplierInvoice extends Page implements HasActions, HasSchemas, HasTable
                                 'headers' => $headers,
                                 'rows' => $rows,
                                 'summaryRow' => $summaryRow,
-                                'paper' => strtoupper($paper),
                                 'dateRange' => $dateRangeDisplay,
-                            ])->setPaper($paper, 'landscape');
+                            ])->setPaper('a4');
 
                             return response()->streamDownload(static function () use ($pdf): void {
                                 echo $pdf->output();
